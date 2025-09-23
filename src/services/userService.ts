@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BirthData, NatalChart } from './astrologyService';
+import { BirthData, NatalChart } from './simpleAstrologyService';
 
 export interface UserProfile {
   id: string;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { theme } from '../theme';
 import BirthDataForm from '../components/BirthDataForm';
-import { AstrologyService, BirthData, NatalChart } from '../services/astrologyService';
+import { AstrologyService, BirthData, NatalChart } from '../services/simpleAstrologyService';
 import { UserService } from '../services/userService';
 
 export default function ChartScreen() {

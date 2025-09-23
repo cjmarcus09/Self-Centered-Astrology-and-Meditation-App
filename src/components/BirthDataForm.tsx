@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { theme } from '../theme';
-import { BirthData } from '../services/astrologyService';
+import { BirthData } from '../services/simpleAstrologyService';
 
 interface Props {
   onSubmit: (birthData: BirthData) => void;

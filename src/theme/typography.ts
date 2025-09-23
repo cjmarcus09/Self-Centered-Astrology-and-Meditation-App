@@ -13,11 +13,11 @@ export const typography = {
   },
 
   fontWeights: {
-    normal: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700',
-    extrabold: '800',
+    normal: '400' as const,
+    medium: '500' as const,
+    semibold: '600' as const,
+    bold: '700' as const,
+    extrabold: '800' as const,
   },
 
   lineHeights: {
@@ -39,65 +39,65 @@ export const typography = {
   styles: {
     h1: {
       fontSize: 36,
-      fontWeight: '700',
+      fontWeight: '700' as const,
       lineHeight: 1.2,
       letterSpacing: -0.025,
     },
     h2: {
       fontSize: 30,
-      fontWeight: '600',
+      fontWeight: '600' as const,
       lineHeight: 1.3,
       letterSpacing: -0.02,
     },
     h3: {
       fontSize: 24,
-      fontWeight: '600',
+      fontWeight: '600' as const,
       lineHeight: 1.4,
       letterSpacing: -0.015,
     },
     h4: {
       fontSize: 20,
-      fontWeight: '500',
+      fontWeight: '500' as const,
       lineHeight: 1.4,
     },
     h5: {
       fontSize: 18,
-      fontWeight: '500',
+      fontWeight: '500' as const,
       lineHeight: 1.5,
     },
     h6: {
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: '500' as const,
       lineHeight: 1.5,
     },
     body: {
       fontSize: 16,
-      fontWeight: '400',
+      fontWeight: '400' as const,
       lineHeight: 1.5,
     },
     bodySmall: {
       fontSize: 14,
-      fontWeight: '400',
+      fontWeight: '400' as const,
       lineHeight: 1.5,
     },
     caption: {
       fontSize: 12,
-      fontWeight: '400',
+      fontWeight: '400' as const,
       lineHeight: 1.4,
     },
     button: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: '600' as const,
       lineHeight: 1.2,
     },
     label: {
       fontSize: 14,
-      fontWeight: '500',
+      fontWeight: '500' as const,
       lineHeight: 1.2,
     },
     overline: {
       fontSize: 12,
-      fontWeight: '500',
+      fontWeight: '500' as const,
       lineHeight: 1.2,
       letterSpacing: 0.1,
       textTransform: 'uppercase' as const,
