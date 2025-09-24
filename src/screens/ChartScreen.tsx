@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, Dimensions } from 'react-native';
 import { theme } from '../theme';
-import BirthDataForm from '../components/BirthDataForm';
+import ImprovedBirthDataForm from '../components/ImprovedBirthDataForm';
 import InteractiveAstrologyChart from '../components/InteractiveAstrologyChart';
 import { AstrologyService, BirthData, NatalChart } from '../services/simpleAstrologyService';
 import { UserService } from '../services/userService';
@@ -67,9 +67,7 @@ export default function ChartScreen() {
 
   if (!hasProfile) {
     return (
-      <ScrollView style={styles.scrollContainer}>
-        <BirthDataForm onSubmit={handleBirthDataSubmit} />
-      </ScrollView>
+      <ImprovedBirthDataForm onSubmit={handleBirthDataSubmit} />
     );
   }
 
