@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Dimensions } from 'react-native';
 import { theme } from '../theme';
 import BirthDataForm from '../components/BirthDataForm';
+import InteractiveAstrologyChart from '../components/InteractiveAstrologyChart';
 import { AstrologyService, BirthData, NatalChart } from '../services/simpleAstrologyService';
 import { UserService } from '../services/userService';
 
@@ -72,50 +73,86 @@ export default function ChartScreen() {
     );
   }
 
+  const { width: screenWidth } = Dimensions.get('window');
+  const chartSize = Math.min(screenWidth * 0.9, 350);
+
   return (
-    <ScrollView style={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Your Natal Chart</Text>
-
-        {natalChart ? (
-          <View style={styles.chartContainer}>
-            <Text style={styles.sectionTitle}>Planetary Positions</Text>
-            {natalChart.planets.map((planet, index) => (
-              <View key={index} style={styles.planetRow}>
-                <Text style={styles.planetName}>{planet.name}</Text>
-                <Text style={styles.planetPosition}>
-                  {planet.degree}° {planet.sign} {planet.minute}'
-                </Text>
-              </View>
-            ))}
-
-            <Text style={styles.sectionTitle}>Houses</Text>
-            {natalChart.houses.slice(0, 4).map((house, index) => (
-              <View key={index} style={styles.houseRow}>
-                <Text style={styles.houseName}>House {house.number}</Text>
-                <Text style={styles.housePosition}>
-                  {Math.floor(house.cusp)}° {house.sign}
-                </Text>
-              </View>
-            ))}
-
-            <Text style={styles.sectionTitle}>Major Aspects</Text>
-            {natalChart.aspects.slice(0, 6).map((aspect, index) => (
-              <View key={index} style={styles.aspectRow}>
-                <Text style={styles.aspectText}>
-                  {aspect.planet1} {aspect.type} {aspect.planet2}
-                </Text>
-                <Text style={styles.aspectOrb}>
-                  {aspect.orb.toFixed(1)}° orb
-                </Text>
-              </View>
-            ))}
+    <View style={styles.mainContainer}>
+      {natalChart ? (
+        <>
+          <View style={styles.header}>
+            <Text style={styles.title}>Your Natal Chart</Text>
+            <Text style={styles.subtitle}>Tap planets for details • Pinch to zoom • Drag to pan</Text>
           </View>
-        ) : (
+
+          <View style={styles.chartWrapper}>
+            <InteractiveAstrologyChart
+              natalChart={natalChart}
+              size={chartSize}
+            />
+          </View>
+
+          <ScrollView style={styles.detailsContainer} showsVerticalScrollIndicator={false}>
+            <View style={styles.detailsContent}>
+              <Text style={styles.sectionTitle}>Chart Summary</Text>
+
+              <View style={styles.summaryGrid}>
+                <View style={styles.summaryItem}>
+                  <Text style={styles.summaryLabel}>Ascendant</Text>
+                  <Text style={styles.summaryValue}>
+                    {Math.floor(natalChart.ascendant)}° {natalChart.houses[0]?.sign}
+                  </Text>
+                </View>
+
+                <View style={styles.summaryItem}>
+                  <Text style={styles.summaryLabel}>Midheaven</Text>
+                  <Text style={styles.summaryValue}>
+                    {Math.floor(natalChart.midheaven)}° {natalChart.houses[9]?.sign}
+                  </Text>
+                </View>
+
+                <View style={styles.summaryItem}>
+                  <Text style={styles.summaryLabel}>Planets</Text>
+                  <Text style={styles.summaryValue}>{natalChart.planets.length}</Text>
+                </View>
+
+                <View style={styles.summaryItem}>
+                  <Text style={styles.summaryLabel}>Aspects</Text>
+                  <Text style={styles.summaryValue}>{natalChart.aspects.length}</Text>
+                </View>
+              </View>
+
+              <Text style={styles.sectionTitle}>Quick Planetary Overview</Text>
+              {natalChart.planets.slice(0, 6).map((planet, index) => (
+                <View key={index} style={styles.planetRow}>
+                  <Text style={styles.planetName}>{planet.name}</Text>
+                  <Text style={styles.planetPosition}>
+                    {planet.degree}° {planet.sign}
+                    {planet.house && ` • House ${planet.house}`}
+                  </Text>
+                </View>
+              ))}
+
+              <Text style={styles.sectionTitle}>Major Aspects</Text>
+              {natalChart.aspects.slice(0, 8).map((aspect, index) => (
+                <View key={index} style={styles.aspectRow}>
+                  <Text style={styles.aspectText}>
+                    {aspect.planet1} {aspect.type} {aspect.planet2}
+                  </Text>
+                  <Text style={styles.aspectOrb}>
+                    {aspect.orb.toFixed(1)}°
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        </>
+      ) : (
+        <View style={styles.loadingContainer}>
           <Text style={styles.subtitle}>Chart calculation in progress...</Text>
-        )}
-      </View>
-    </ScrollView>
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -124,7 +161,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background.primary,
   },
-  container: {
+  mainContainer: {
+    flex: 1,
+    backgroundColor: theme.colors.background.primary,
+  },
+  header: {
+    padding: theme.spacing[4],
+    paddingBottom: theme.spacing[2],
+    alignItems: 'center',
+  },
+  chartWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing[4],
+  },
+  detailsContainer: {
+    flex: 1,
+    backgroundColor: theme.colors.background.secondary,
+    borderTopLeftRadius: theme.borderRadius['2xl'],
+    borderTopRightRadius: theme.borderRadius['2xl'],
+    marginTop: theme.spacing[4],
+  },
+  detailsContent: {
     padding: theme.spacing[6],
   },
   loadingContainer: {
@@ -138,71 +196,88 @@ const styles = StyleSheet.create({
     color: theme.colors.text.secondary,
   },
   title: {
-    ...theme.typography.styles.h1,
+    ...theme.typography.styles.h2,
     color: theme.colors.text.primary,
-    marginBottom: theme.spacing[6],
+    marginBottom: theme.spacing[2],
     textAlign: 'center',
   },
   subtitle: {
-    ...theme.typography.styles.body,
+    ...theme.typography.styles.bodySmall,
     color: theme.colors.text.secondary,
     textAlign: 'center',
-  },
-  chartContainer: {
-    marginTop: theme.spacing[4],
+    marginBottom: theme.spacing[4],
   },
   sectionTitle: {
-    ...theme.typography.styles.h3,
+    ...theme.typography.styles.h4,
     color: theme.colors.primary[400],
     marginTop: theme.spacing[6],
     marginBottom: theme.spacing[4],
   },
+  summaryGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing[6],
+  },
+  summaryItem: {
+    width: '48%',
+    backgroundColor: theme.colors.background.surface,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing[4],
+    marginBottom: theme.spacing[3],
+    alignItems: 'center',
+  },
+  summaryLabel: {
+    ...theme.typography.styles.bodySmall,
+    color: theme.colors.text.tertiary,
+    marginBottom: theme.spacing[1],
+  },
+  summaryValue: {
+    ...theme.typography.styles.body,
+    color: theme.colors.text.primary,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
   planetRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: theme.spacing[2],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.background.tertiary,
+    alignItems: 'center',
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    backgroundColor: theme.colors.background.surface,
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing[2],
   },
   planetName: {
     ...theme.typography.styles.body,
     color: theme.colors.text.primary,
-    fontWeight: '500',
+    fontWeight: '600',
+    flex: 1,
   },
   planetPosition: {
-    ...theme.typography.styles.body,
+    ...theme.typography.styles.bodySmall,
     color: theme.colors.text.secondary,
-  },
-  houseRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: theme.spacing[2],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.background.tertiary,
-  },
-  houseName: {
-    ...theme.typography.styles.body,
-    color: theme.colors.text.primary,
-    fontWeight: '500',
-  },
-  housePosition: {
-    ...theme.typography.styles.body,
-    color: theme.colors.text.secondary,
+    textAlign: 'right',
+    flex: 1,
   },
   aspectRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: theme.spacing[2],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.background.tertiary,
+    alignItems: 'center',
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    backgroundColor: theme.colors.background.surface,
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing[2],
   },
   aspectText: {
-    ...theme.typography.styles.body,
+    ...theme.typography.styles.bodySmall,
     color: theme.colors.text.primary,
     flex: 1,
   },
   aspectOrb: {
-    ...theme.typography.styles.bodySmall,
+    ...theme.typography.styles.caption,
     color: theme.colors.text.tertiary,
+    fontWeight: '500',
   },
 });
