@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, Dimensions } from 'react-native';
 import { theme } from '../theme';
 import ImprovedBirthDataForm from '../components/ImprovedBirthDataForm';
-import InteractiveAstrologyChart from '../components/InteractiveAstrologyChart';
+import SimpleAstrologyChart from '../components/SimpleAstrologyChart';
 import { AstrologyService, BirthData, NatalChart } from '../services/simpleAstrologyService';
 import { UserService } from '../services/userService';
 
@@ -80,11 +80,11 @@ export default function ChartScreen() {
         <>
           <View style={styles.header}>
             <Text style={styles.title}>Your Natal Chart</Text>
-            <Text style={styles.subtitle}>Tap planets for details • Pinch to zoom • Drag to pan</Text>
+            <Text style={styles.subtitle}>Tap planets for details and interpretations</Text>
           </View>
 
           <View style={styles.chartWrapper}>
-            <InteractiveAstrologyChart
+            <SimpleAstrologyChart
               natalChart={natalChart}
               size={chartSize}
             />

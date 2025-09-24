@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-// Gesture handler imports removed for now to avoid compatibility issues
-import { Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import AstrologyChart from './AstrologyChart';
 import PlanetTooltip from './PlanetTooltip';
 import { NatalChart, Planet } from '../services/simpleAstrologyService';
@@ -12,14 +10,10 @@ interface Props {
   size?: number;
 }
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
-export default function InteractiveAstrologyChart({ natalChart, size = 320 }: Props) {
+export default function SimpleAstrologyChart({ natalChart, size = 320 }: Props) {
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-
-  // Simplified without animations for now
 
   // Handle planet tap
   const handlePlanetPress = (planet: Planet, event: any) => {
@@ -38,8 +32,6 @@ export default function InteractiveAstrologyChart({ natalChart, size = 320 }: Pr
     setTooltipVisible(false);
     setSelectedPlanet(null);
   };
-
-  // Reset functionality removed for now
 
   // Calculate planet touch areas
   const renderPlanetTouchAreas = () => {
@@ -112,11 +104,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  gestureContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   chartContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -127,9 +114,5 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: 'transparent',
-    // For debugging: uncomment to see touch areas
-    // backgroundColor: 'rgba(255, 0, 0, 0.2)',
-    // borderWidth: 1,
-    // borderColor: 'red',
   },
 });
